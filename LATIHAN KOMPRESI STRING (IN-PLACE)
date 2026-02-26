@@ -1,0 +1,85 @@
+/*  ============================================================
+    TUGAS 1 - LATIHAN KOMPRESI STRING (IN-PLACE)
+    
+    Nama  : An'Amatus Syafira Aulia Azahra
+    Kelas : 2 A Informatika
+    NPM   : 2510631170013
+    Matkul: Struktur Data
+    ============================================================
+*/
+
+
+#include <iostream>   // Library untuk input output
+using namespace std;  // biar gak perlu tulis std::cout terus
+
+//Fungsi compress() Fungsi ini digunakan untuk mengkompresi array karakter
+int compress(char arr[], int panjang) {
+    
+    int posisi = 0;   // Menunjukkan posisi penulisan hasil kompresi
+    int i = 0;        // Indeks untuk membaca array asli
+
+    // Perulangan selama belum mencapai akhir array
+    while (i < panjang) {
+        
+        char huruf = arr[i];  // Simpan karakter saat ini
+        int jumlah = 1;       // Hitung kemunculan karakter (minimal 1)
+
+        // Hitung jumlah karakter yang sama secara berurutan
+        while (i + jumlah < panjang && arr[i + jumlah] == huruf) {
+            jumlah++;
+        }
+
+        // Tulis huruf ke posisi baru (hasil kompresi)
+        arr[posisi] = huruf;
+        posisi++;
+
+        // Jika huruf muncul lebih dari 1 kali,
+        // maka tulis jumlahnya setelah huruf
+        if (jumlah > 1) {
+            arr[posisi] = '0' + jumlah;  
+            // '0' + jumlah digunakan untuk mengubah angka ke karakter
+            // Contoh: 2 -> '2'
+            posisi++;
+        }
+
+        // Lompat ke karakter berikutnya setelah dihitung
+        i += jumlah;
+    }
+
+    // Kembalikan panjang baru array setelah dikompresi
+    return posisi;
+}
+
+int main() {
+
+    // Tampilan Header Program
+    cout << " ==============================================" << endl;
+    cout << " ========== LATIHAN KOMPRESI STRING ===========" << endl;
+    cout << " ==============================================" << endl;
+    cout << " ------- An'Amatus Syafira Aulia Azahra -------" << endl;
+    cout << " ==============================================" << endl << endl;
+
+    // Array contoh
+    char data1[] = {'a', 'a', 'b', 'b', 'c'};
+    int ukuran1 = 5;
+
+    // Menampilkan array sebelum dikompresi
+    cout << " Array Awal: ";
+    for (int i = 0; i < ukuran1; i++) 
+        cout << data1[i] << " ";
+    cout << endl;
+
+    // Memanggil fungsi compress
+    int baru1 = compress(data1, ukuran1);
+
+    // Menampilkan hasil kompresi
+    cout << " Hasil Kompresi: ";
+    for (int i = 0; i < baru1; i++) 
+        cout << data1[i] << " ";
+    cout << endl;
+
+    // Menampilkan panjang array setelah dikompresi
+    cout << " Panjang baru: " << baru1 << endl;
+
+    return 0; // program selesai
+}

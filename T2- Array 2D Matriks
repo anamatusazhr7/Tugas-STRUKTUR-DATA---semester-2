@@ -1,0 +1,49 @@
+#include <iostream> 
+#include <iomanip>  
+#include <utility>  
+using namespace std;
+
+int main() {
+    int n;
+    cout << "Masukkan ukuran matriks (n x n): ";
+    cin >> n;
+    int matriks[n][n];
+
+    cout << "Masukkan elemen matriks:" << endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << "Matriks[" << i << "][" << j << "]: ";
+            cin >> matriks[i][j];
+        }
+    }
+
+    cout << "\nMatriks Awal:" << endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << setw(4) << matriks[i][j];
+        }
+        cout << endl;
+    }
+    
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            swap(matriks[i][j], matriks[j][i]);
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n / 2; j++) {
+            swap(matriks[i][j], matriks[i][n - 1 - j]);
+        }
+    }
+
+    cout << "\nMatriks Setelah Rotasi 90 Derajat (Searah Jarum Jam):" << endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << setw(4) << matriks[i][j];
+        }
+        cout << endl;
+    }
+
+    return 0;
+}

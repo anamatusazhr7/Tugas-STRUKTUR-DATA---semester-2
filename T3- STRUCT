@@ -1,0 +1,209 @@
+/*  (TUGAS 3)
+     Nama   : An'Amatus Syafira Aulia Azahra
+     NPM    : 2510631170013
+     Kelas  : 2A Informatika
+     Matkul : Struktur Data
+*/
+
+#include <iostream>    // Library untuk Input/Output (cout, cin)
+#include <iomanip>     // Library untuk format output (setw, setprecision)
+using namespace std;
+
+// Struct Nilai: Menyimpan komponen-komponen nilai mahasiswa
+struct Nilai {
+    float Absen;
+    float Tugas;
+    float UTS;
+    float UAS;
+    float NilaiAkhir; 
+    char Huruf;                          
+};
+
+// Struct Mahasiswa: Struktur utama yang menggabungkan identitas dan nilai
+struct Mahasiswa {
+    string NPM;      // NPM (Nomor Pokok Mahasiswa)
+    string Nama;     // Nama Lengkap Mahasiswa
+    Nilai nilai;     // Objek bertipe Nilai yang disimpan di dalam Mahasiswa
+};
+
+int main() {
+    // Array untuk menyimpan data mahasiswa 
+    Mahasiswa MHS[20]; 
+    // Variabel penanda jumlah data yang sudah masuk 
+    int JumlahData = 0; 
+    // Variabel untuk menu dan pencarian
+    int Pilihan;
+    string CariNPM;
+    bool Ditemukan; // Flag untuk mengecek apakah data ditemukan atau tidak
+
+    
+    // Loop akan terus berjalan selama pilihan != 5
+    do {
+        // Tampilan Menu
+        cout << "\n============================================================" << endl;
+        cout << "                SISTEM INFORMASI NLAI MAHASISWA               " << endl;
+        cout << "               PRODI INFORMATIKA - SEMERTER GENAP                " << endl;
+        cout << "============================================================" << endl;
+        cout << " [1] Input Data Mahasiswa" << endl;
+        cout << " [2] Tampilkan Semua Data" << endl;
+        cout << " [3] Edit Nama (Cari NPM)" << endl;
+        cout << " [4] Hapus Data (Cari NPM)" << endl;
+        cout << " [5] Keluar" << endl;
+        cout << "------------------------------------------------------------" << endl;
+        cout << " Pilih Menu [1-5]: ";
+        cin >> Pilihan;
+
+        
+        switch (Pilihan) {
+        case 1: 
+            // Cek apakah array sudah penuh (Maks 20)
+            if (JumlahData < 20) {
+                cout << "\n--- Input Data Mahasiswa Ke-" << JumlahData + 1 << " ---" << endl;
+                
+                // Input Identitas
+                cout << " Masukkan NPM         : ";
+                cin >> MHS[JumlahData].NPM;
+                
+                // Input Nama (Menggunakan getline karena nama bisa spasi)
+                // cin.ignore() diperlukan untuk membuang karakter enter dari input sebelumnya
+                cout << " Masukkan Nama        : ";
+                cin.ignore(); 
+                getline(cin, MHS[JumlahData].Nama);
+                
+                // Input Nilai Angka
+                cout << " Nilai Absen (10%)    : ";
+                cin >> MHS[JumlahData].nilai.Absen;
+                cout << " Nilai Tugas (20%)    : ";
+                cin >> MHS[JumlahData].nilai.Tugas;
+                cout << " Nilai UTS   (30%)    : ";
+                cin >> MHS[JumlahData].nilai.UTS;
+                cout << " Nilai UAS   (40%)    : ";
+                cin >> MHS[JumlahData].nilai.UAS;
+
+                // PERHITUNGAN NILAI AKHIR (Rumus: 10%*Absen + 20%*tugas + 30%*UTS + 40%*UAS)
+                MHS[JumlahData].nilai.NilaiAkhir = (0.1 * MHS[JumlahData].nilai.Absen) +
+                                              (0.2 * MHS[JumlahData].nilai.Tugas) +
+                                              (0.3 * MHS[JumlahData].nilai.UTS) +
+                                              (0.4 * MHS[JumlahData].nilai.UAS);
+                // KOVERSI NILAI HURUF
+                if (MHS[JumlahData].nilai.NilaiAkhir > 80) 
+                   MHS[JumlahData].nilai.Huruf = 'A';
+                else if (MHS[JumlahData].nilai.NilaiAkhir >= 70) 
+                    MHS[JumlahData].nilai.Huruf = 'B';
+                else if (MHS[JumlahData].nilai.NilaiAkhir >= 60) 
+                   MHS[JumlahData].nilai.Huruf = 'C';
+                else 
+                    MHS[JumlahData].nilai.Huruf = 'D';
+
+                // Tambah jumlah data dan simpan ke array
+                JumlahData++;
+                cout << "\n Data berhasil disimpan!" << endl;
+            } else {
+                cout << "\n Kapasitas penuh (Maks 20)!" << endl;
+            }
+            break;
+            
+        case 2: 
+            cout << "\n============================================================" << endl;
+            cout << "                    DAFTAR NILAI MAHASISWA                      " ;
+            cout << "\n============================================================" << endl;
+            // Format Tabel Output menggunakan setw (lebar kolom) dan left (rata kiri)
+            cout << left << setw(4)  << "No"
+                 << left << setw(12) << "NPM"
+                 << left << setw(25) << "Nama"
+                 << left << setw(15) << "Nilai Akhir"
+                 << left << " Grade" << endl;
+            cout << "-------------------------------------------------------------" << endl;
+
+            // Cek jika data kosong
+            if (JumlahData == 0) {
+                cout << "                      --- Data Kosong ---" << endl;
+            } else {
+                // Loop untuk menampilkan semua data yang ada
+                for (int i = 0; i < JumlahData; i++) {
+                    cout << left << setw(4)  << i + 1
+                         << left << setw(12) << MHS[i].NPM
+                         << left << setw(25) << MHS[i].Nama
+                         // fixed & setprecision(1) untuk membulatkan 1 angka desimal
+                         << left << setw(15) << fixed << setprecision(1) << MHS[i].nilai.NilaiAkhir
+                         << left << MHS[i].nilai.Huruf << endl;
+                }
+            }
+            cout << "=============================================================" << endl;
+            break;
+            
+        case 3: 
+            if (JumlahData == 0) {
+                cout << " Tidak ada data untuk diedit." << endl;
+            } else {
+                cout << "\n================================================================" << endl;
+                cout << "                    EDIT DATA MAHASISWA                      " << endl;
+                cout << "\n================================================================" << endl;
+               
+
+                cout << "Masukkan NPM yang akan diedit: ";
+                cin >> CariNPM;
+                Ditemukan = false; // Reset flag pencarian
+
+                // Linear Search: Mencari NPM di dalam array
+                for (int i = 0; i < JumlahData; i++) {
+                    if (MHS[i].NPM == CariNPM) {
+                        cout << " Nama Lama: " <<MHS[i].Nama << endl;
+                        cout << " Nama Baru: ";
+                        cin.ignore();
+                        getline(cin,MHS[i].Nama); // Update data nama
+                        
+                        cout << " Nama berhasil diperbarui!" << endl;
+                        Ditemukan = true;
+                        break; // Berhenti mencari setelah data ditemukan
+                    }
+                }
+                // Jika loop selesai tapi flag ditemukan masih false
+                if (!Ditemukan) cout << " Data NPM tidak ditemukan!" << endl;
+            }
+            break;
+            
+        case 4: 
+            if (JumlahData == 0) {
+                cout << " Tidak ada data untuk dihapus." << endl;
+            } else {
+                cout << "\n================================================================" << endl;
+                cout << "                    HAPUS DATA MAHASISWA                      " << endl;
+                cout << "\n================================================================" << endl;
+                
+                cout << " Masukkan NPM yang akan dihapus: ";
+                cin >> CariNPM;
+                Ditemukan = false;
+
+                // Linear Search untuk mencari index data yang akan dihapus
+                for (int i = 0; i < JumlahData; i++) {
+                    if (MHS[i].NPM == CariNPM) {
+                        for (int j = i; j < JumlahData - 1; j++) {
+                            MHS[j] = MHS[j + 1];
+                        }
+                        
+                        // Kurangi jumlah data total
+                        JumlahData--;
+                        
+                        cout << " Data berhasil dihapus!" << endl;
+                        Ditemukan = true;
+                        break;
+                    }
+                }
+                if (!Ditemukan) cout << " Data NPM tidak ditemukan!" << endl;
+            }
+            break;
+
+        case 5:
+             cout << "\n============================================================" << endl;
+             cout << "         TERIMA KASIH TELAH MENGGUNAKAN PROGRAM INI!..           " ;
+             cout << "\n============================================================" << endl;
+            
+        default:
+            cout << " Pilihan tidak valid! Silahkan pilih menu 1-5." << endl;
+        }
+
+    } while (Pilihan != 5); // Loop berhenti jika user memilih 5
+
+    return 0;
+}

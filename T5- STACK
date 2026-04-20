@@ -1,0 +1,90 @@
+#include <iostream>         // Library untuk input/output (cout, endl).
+using namespace std;        // Agar tidak perlu menulis std:: sebelum cout atau endl.
+
+const int MAKS = 10;        // Menentukan kapasitas maksimal array (tumpukan) adalah 10 elemen.
+
+// ===== Struct Stack Array =====
+struct Stack {          //Membuat tipe data bentukan bernama 'Stack'.
+    int data[MAKS];     // Array untuk menyimpan angka (batu/disk).
+    int top;            // Variabel penanda indeks posisi paling atas.
+    char nama;          // Label untuk tiang (misal: 'A', 'B', atau 'C').
+
+    void init(char n) {     // Fungsi untuk menginisialisasi tiang.
+        top  = 0;           // Mengatur tiang agar kosong di awal (top dimulai dari 0).
+        nama = n;           // Memberi identitas nama pada tiang tersebut.
+    }
+
+    bool isEmpty() { return top == 0; }         // Mengembalikan True jika tiang kosong.
+    bool isFull()  { return top >= MAKS; }      // Mengembalikan True jika tiang penuh.
+
+    void push(int val) {                        // Fungsi menambah batu ke atas.
+        if (!isFull()) data[top++] = val;       // Jika tidak penuh, masukkan data ke indeks top,
+    }                                           // lalu nilai top naik 1 (post-increment).
+
+    int pop() {                                 // Fungsi mengambil batu teratas.
+        if (!isEmpty()) return data[--top];     // Jika tidak kosong, turunkan nilai top dulu,
+        return -1;                              // lalu ambil datanya. Jika kosong, kirim -1.
+    }
+    int peek() {                                // Fungsi mengintip batu teratas.
+        if (!isEmpty()) return data[top - 1];   // Melihat data tanpa menghapusnya dari array.
+        return -1;
+    }
+};
+
+// ===== Counter Langkah =====
+int langkah = 0;                                // Variabel global untuk menghitung total perpindahan batu.
+
+// ===== Fungsi Pindah (Pop dari src, Push ke dst) =====
+void pindahkan(Stack &dari, Stack &ke) {            // Mengambil dua objek Stack (tiang asal & tujuan).
+    int disk = dari.pop();                          // Langkah 1: Ambil (pop) batu dari tiang asal.
+    ke.push(disk);                                  // Langkah 2: Masukkan (push) batu ke tiang tujuan.
+    langkah++;                                      // Tambah hitungan langkah.                                
+    
+    // Mencetak riwayat perpindahan ke layar
+    cout << langkah << ". Pindahkan batu " << disk
+         << " dari " << dari.nama << " ke " << ke.nama << endl;
+}
+// ===== Algoritma Rekursif Hanoi =====
+// n: jumlah piringan, src: tiang asal, aux: tiang bantuan, dst: tiang tujuan
+void hanoi(int n, Stack &src, Stack &aux, Stack &dst) {
+    if (n == 1) {                       // Kondisi dasar (base case): jika hanya ada 1 piringan
+        pindahkan(src, dst);            // Langsung pindahkan piringan tersebut dari asal ke tujuan
+        return;                         // Keluar dari fungsi rekursif
+    }
+    
+    // Langkah 1: Pindahkan n-1 piringan dari asal ke bantuan (menggunakan tiang tujuan sebagai bantuan)
+    hanoi(n - 1, src, dst, aux);
+    
+    // Langkah 2: Pindahkan piringan terbesar yang tersisa di asal ke tiang tujuan
+    pindahkan(src, dst);
+    
+    // Langkah 3: Pindahkan n-1 piringan yang tadi ada di bantuan ke tujuan (menggunakan tiang asal sebagai bantuan)
+    hanoi(n - 1, aux, src, dst);
+}
+
+// ===== Main =====
+int main() {
+    Stack A, B, C;      // Mendeklarasikan tiga objek Stack sebagai tiang A, B, dan C
+    A.init('A');        // Inisialisasi tiang A dengan nama 'A' dan top = 0
+    B.init('B');        // Inisialisasi tiang B dengan nama 'B' dan top = 0
+    C.init('C');        // Inisialisasi tiang C dengan nama 'C' dan top = 0
+
+    // Isi Menara A: push dari bawah ke atas (30 dulu, lalu 20, lalu 10)
+    A.push(30);     // Memasukkan piringan paling besar (ukuran 30) ke dasar tiang A
+    A.push(20);     // Memasukkan piringan sedang (ukuran 20) di atas piringan 30
+    A.push(10);     // Memasukkan piringan terkecil (ukuran 10) di paling atas
+
+    cout << "==============================" << endl;
+    cout << "   MENARA HANOI - 3 Lempengan " << endl;
+    cout << "   Dari A ke C (perantara B)  " << endl;
+    cout << "==============================" << endl;
+
+    // Memanggil fungsi rekursif untuk memindahkan 3 piringan dari A ke C menggunakan bantuan B
+    hanoi(3, A, B, C);
+
+    cout << "==============================" << endl;
+    // Mencetak total langkah yang telah diakumulasi oleh variabel global 'langkah'
+    cout << "Selesai dalam " << langkah << " langkah!" << endl;
+
+    return 0;       // Mengakhiri program dengan sukses
+}

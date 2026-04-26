@@ -1,0 +1,45 @@
+#include <iostream>         // Library untuk input output dasar (cout, cin)
+#include <queue>            // Library untuk struktur data queue (FIFO)
+#include <stack>            // Library untuk struktur data stack (LIFO)
+#define maks 20;            // Define konstanta maks (tidak digunakan dalam kode, ada semicolon berlebih)
+using namespace std;        // Menggunakan namespace standard untuk menghindari std::
+
+int main() {                // Fungsi utama program
+    string input;           // Deklarasi variabel string untuk menyimpan input user
+    
+    
+    cout << "Input:\n";     // Menampilkan pesan "Input:" diikuti baris baru
+    cin >> input;           // Membaca input string dari user dan menyimpan ke variabel input
+
+        queue <char> q;     // Deklarasi queue bertipe char untuk menyimpan karakter input
+        stack <char> s;     // Deklarasi stack bertipe char untuk menyimpan karakter input
+        
+        // Loop untuk memasukkan setiap karakter dari input ke queue dan stack
+        for (char c : input) {
+            q.push(c);      // Memasukkan karakter ke belakang queue (FIFO)
+            s.push(c);      // Memasukkan karakter ke atas stack (LIFO)
+        }
+        
+        bool isPalindrome = true;       // Flag untuk menandakan apakah input adalah palindrom (awalnya true)
+        
+        
+        // Loop untuk membandingkan karakter dari queue dan stack
+        while (!q.empty()) {
+            if (q.front() != s.top()) {     // Jika karakter depan queue != karakter atas stack
+                
+                isPalindrome = false;       // Set flag menjadi false (bukan palindrom)
+                break;                      // Keluar dari loop while
+            }
+            q.pop();        // Hapus karakter dari depan queue
+            s.pop();        // Hapus karakter dari atas stack
+        }             
+    cout << "output\n";                         // Menampilkan "output" diikuti baris baru
+    if (isPalindrome) {                         // Jika flag masih true (palindrom)
+        cout << "queue palindrom";              // Tampilkan pesan palindrom
+    } else {                                    // Jika flag false (bukan palindrom)
+        cout << "queue tidak palindrom";        // Tampilkan pesan bukan palindrom
+    }
+    
+    
+    return 0;                                   // Mengembalikan 0 (program berjalan sukses)
+}

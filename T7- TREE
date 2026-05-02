@@ -1,0 +1,64 @@
+#include <iostream>  // Library untuk input-output
+#include <queue>     // Library untuk menggunakan queue (antrean)
+using namespace std;
+
+// Struktur node untuk tree, setiap node memiliki nilai dan pointer ke anak kiri dan kanan
+struct TreeNode {
+    int val;             // Nilai node
+    TreeNode *left, *right;  // Pointer ke anak kiri dan anak kanan
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}  // Konstruktor untuk inisialisasi node
+};
+
+// Fungsi untuk mencari kedalaman minimum dari sebuah binary tree
+int minDepth(TreeNode* root) {
+    if (root == NULL) return 0;  // Jika tree kosong, kedalaman 0
+    
+    queue<TreeNode*> q;           // Membuat queue untuk BFS
+    q.push(root);                 // Masukkan root ke dalam queue
+    int depth = 1;                // Kedalaman awal dimulai dari 1 (root)
+    
+    // Perulangan sampai queue kosong
+    while (!q.empty()) {
+        int size = q.size();      // Jumlah node pada level saat ini
+        
+        // Iterasi semua node di level ini
+        for (int i = 0; i < size; i++) {
+            TreeNode* current = q.front();  // Ambil node terdepan di queue
+            q.pop();                        // Keluarkan node dari queue
+            
+            // Jika node ini daun (tidak punya anak kiri maupun kanan)
+            if (current->left == NULL && current->right == NULL)
+                return depth;               // Ini adalah minimum depth, langsung kembalikan
+            
+            // Jika ada anak kiri, masukkan ke queue untuk level berikutnya
+            if (current->left)
+                q.push(current->left);
+            // Jika ada anak kanan, masukkan ke queue untuk level berikutnya
+            if (current->right)
+                q.push(current->right);
+        }
+        depth++;  // Setelah mengecek semua node di level ini, naikkan depth ke level berikutnya
+    }
+    return depth;  // Return nilai depth (seharusnya sudah return di dalam loop jika ada leaf)
+}
+
+int main() {
+    // Membuat binary tree sesuai input contoh
+    TreeNode* root = new TreeNode(3);
+    root->left = new TreeNode(9);
+    root->right = new TreeNode(20);
+    root->right->left = new TreeNode(15);
+    root->right->right = new TreeNode(7);
+
+    // Menampilkan kedalaman minimum tree
+    cout << " Minimum Depth dari tree: " << minDepth(root) << endl;
+
+    // Dealokasi memori untuk node-node agar tidak memory leak
+    delete root->right->right;
+    delete root->right->left;
+    delete root->right;
+    delete root->left;
+    delete root;
+
+    return 0;  // Program selesai
+}

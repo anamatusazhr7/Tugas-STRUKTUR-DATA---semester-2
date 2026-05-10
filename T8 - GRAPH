@@ -1,0 +1,102 @@
+#include <iostream>      // Library standar untuk proses input dan output
+#include <vector>        // Library untuk menggunakan struktur data vector (array dinamis)
+#include <algorithm>     // Library untuk fungsi next_permutation (mencari semua kombinasi rute)
+#include <climits>       // Library untuk menggunakan konstanta INT_MAX (nilai maksimal integer)
+
+using namespace std;     // Menggunakan standar namespace agar tidak perlu menulis std:: terus-menerus
+
+// Mendefinisikan konstanta ukuran maksimal matriks sesuai materi
+const int MAX = 10; 
+int graph[MAX][MAX];     // Deklarasi Adjacency Matrix (Matriks Ketetanggaan) secara global
+int n = 4;               // Inisialisasi jumlah simpul/desa (sesuai contoh soal ada 4 desa)
+
+// Fungsi untuk mencetak isi matriks biaya (Cost List) ke layar
+void cetakGraph() {
+    cout << "Cost List :" << endl;                 // Menampilkan judul tabel
+    for (int i = 0; i < n; i++) {                  // Loop untuk baris matriks
+        for (int j = 0; j < n; j++) {              // Loop untuk kolom matriks
+            cout << graph[i][j] << "\t";           // Mencetak beban/jarak antar simpul
+        }
+        cout << endl;                              // Baris baru setiap satu baris matriks selesai
+    }
+    cout << endl;                                  // Jarak baris kosong untuk kerapihan
+}
+
+// Fungsi utama untuk memecahkan masalah Traveling Salesperson Problem (TSP)
+void solveTSP(int startNode) {
+    vector<int> vertex;                            // Membuat wadah untuk simpul-simpul yang akan dikunjungi
+    
+    // Memasukkan semua simpul selain simpul awal ke dalam list kunjungan
+    for (int i = 0; i < n; i++) {
+        if (i != startNode)                        // Jika simpul tersebut bukan simpul awal yang diinput user
+            vertex.push_back(i);                   // Masukkan ke dalam daftar simpul tujuan
+    }
+
+    int min_path = INT_MAX;                        // Inisialisasi biaya minimum dengan angka tertinggi agar bisa dibandingkan
+    vector<int> best_path;                         // Wadah untuk menyimpan rute terbaik yang ditemukan
+
+    // Memulai proses pencarian rute terpendek dengan mencoba semua permutasi (Brute Force)
+    do {
+        int current_pathweight = 0;                // Variabel sementara untuk menghitung total biaya rute saat ini
+        int k = startNode;                         // Menetapkan posisi awal perjalanan
+        vector<int> current_path;                  // Mencatat urutan desa pada rute yang sedang diuji
+        current_path.push_back(startNode + 1);     // Masukkan desa awal ke urutan rute (ditambah 1 agar sesuai label 1-4)
+
+        // Melakukan perjalanan ke setiap desa berdasarkan urutan permutasi saat ini
+        for (int i = 0; i < vertex.size(); i++) {
+            current_pathweight += graph[k][vertex[i]]; // Menambahkan bobot sisi dari desa k ke desa berikutnya
+            k = vertex[i];                             // Pindah posisi saat ini ke desa yang baru dikunjungi
+            current_path.push_back(k + 1);             // Mencatat desa tersebut ke dalam rute
+        }
+        // Syarat TSP: Kembali lagi ke desa asal (titik awal) setelah semua desa dikunjungi
+        current_pathweight += graph[k][startNode]; 
+        current_path.push_back(startNode + 1);     // Menutup rute dengan desa awal
+
+        // Membandingkan rute saat ini dengan biaya termurah yang pernah disimpan
+        if (current_pathweight < min_path) {       // Jika rute ini ternyata lebih murah biayanya
+            min_path = current_pathweight;         // Simpan biaya ini sebagai rekor biaya minimum baru
+            best_path = current_path;              // Simpan rute ini sebagai rute terbaik saat ini
+        }
+
+    } while (next_permutation(vertex.begin(), vertex.end())); // Lanjut ke permutasi/kombinasi rute berikutnya
+
+    // Menampilkan hasil akhir jalur yang paling efisien
+    cout << "Jalur Terpendek :" << endl;
+    for (int i = 0; i < best_path.size(); i++) {
+        // Mencetak urutan desa dengan tanda panah pengait
+        cout << best_path[i] << (i == best_path.size() - 1 ? "" : "--->"); 
+    }
+    cout << "\n\nMinimum Cost : " << min_path << endl; // Mencetak total biaya terkecil yang didapatkan
+}
+
+int main() {
+    // Inisialisasi data matriks biaya sesuai dengan gambar soal (Adjacency Matrix berbobot)
+    int initialData[4][4] = {
+        {0, 4, 1, 3},                              // Baris 1 (Hubungan Desa 1 ke Desa 1, 2, 3, 4)
+        {4, 0, 2, 1},                              // Baris 2 (Hubungan Desa 2 ke Desa 1, 2, 3, 4)
+        {1, 2, 0, 5},                              // Baris 3 (Hubungan Desa 3 ke Desa 1, 2, 3, 4)
+        {3, 1, 5, 0}                               // Baris 4 (Hubungan Desa 4 ke Desa 1, 2, 3, 4)
+    };
+
+    // Menyalin data dari array statis ke dalam matriks graf global
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            graph[i][j] = initialData[i][j];
+        }
+    }
+
+    int start;                                     // Variabel untuk menampung input user
+    cetakGraph();                                  // Memanggil fungsi untuk menampilkan matriks di awal program
+    
+    cout << "Masukkan titik awal (1-4): ";         // Meminta user memilih titik mulai
+    cin >> start;                                  // Mengambil input dari user
+
+    // Validasi input agar tidak keluar dari rentang jumlah desa (1-4)
+    if (start >= 1 && start <= 4) {
+        solveTSP(start - 1);                       // Memanggil fungsi pencarian (dikurangi 1 karena indeks array mulai dari 0)
+    } else {
+        cout << "Titik tidak valid!" << endl;      // Pesan error jika user salah input
+    }
+
+    return 0;                                      // Menandakan program selesai dengan sukses
+}

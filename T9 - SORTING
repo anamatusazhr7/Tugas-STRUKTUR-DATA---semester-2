@@ -1,0 +1,50 @@
+#include <iostream>  // Library untuk input-output (cout) [cite: 10]
+#include <string>    // Library untuk menggunakan tipe data string [cite: 147]
+
+using namespace std; // Agar tidak perlu menulis std:: di depan cout/string [cite: 10]
+
+// Fungsi untuk mencetak isi array ke layar [cite: 10, 20]
+void cetakArray(string arr[], int n) {
+    for (int i = 0; i < n; i++) {       // Perulangan untuk mengakses setiap elemen array [cite: 10, 21]
+        cout << arr[i] << " ";          // Menampilkan elemen array ke-i [cite: 10, 24]
+    }
+    cout << endl;                       // Pindah ke baris baru setelah selesai [cite: 10, 28]
+}
+
+// Fungsi Bubble Sort untuk mengurutkan string secara menurun (Descending) [cite: 7, 147]
+void bubbleSort(string arr[], int n) {
+    string temp;                        // Variabel penampung sementara untuk proses swap [cite: 10, 102]
+    for (int i = 0; i < n - 1; i++) {   // Loop luar untuk jumlah tahapan pengurutan [cite: 10, 103]
+        for (int j = 0; j < n - 1 - i; j++) { // Loop dalam untuk membandingkan pasangan data [cite: 10]
+            
+            // Logika Descending: Jika data kiri lebih kecil dari data kanan, maka tukar [cite: 3, 7]
+            if (arr[j] < arr[j + 1]) {  
+                // Proses Penukaran (Swap) [cite: 7, 10]
+                temp = arr[j];          // Simpan nilai kiri ke tempat sementara [cite: 10]
+                arr[j] = arr[j + 1];    // Isi posisi kiri dengan nilai dari kanan [cite: 10]
+                arr[j + 1] = temp;      // Isi posisi kanan dengan nilai dari tempat sementara [cite: 10]
+            }
+        }
+    }
+}
+
+int main() {
+    // Definisi data awal berupa string sesuai soal latihan 
+    string data[] = {"zebra", "ayam", "sapi", "kambing"}; 
+    
+    // Menghitung jumlah elemen dalam array [cite: 10, 27]
+    int n = sizeof(data) / sizeof(data[0]); 
+
+    // Menampilkan data asli sebelum diurutkan [cite: 10, 29]
+    cout << "Original Array: ";
+    cetakArray(data, n); 
+
+    // Memproses data menggunakan fungsi bubbleSort [cite: 10, 32]
+    bubbleSort(data, n);
+
+    // Menampilkan hasil setelah diurutkan secara descending 
+    cout << "Sorted Array (Descending): ";
+    cetakArray(data, n); 
+
+    return 0; // Menandakan program selesai dengan normal [cite: 10, 37]
+}

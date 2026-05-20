@@ -1,0 +1,46 @@
+#include <iostream>
+using namespace std;
+
+// Fungsi Sequential Search yang dimodifikasi untuk multiple match
+void sequentialSearchMultiple(int arr[], int n, int search) {
+    bool found = false;
+    int count = 0; // Variabel untuk menghitung total kemunculan angka
+
+    // Memeriksa setiap elemen array secara berurutan
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == search) {
+            cout << "'" << search << "' ditemukan pada indeks ke-" << i << endl;
+            found = true;
+            count++; // Tambahkan hitungan setiap kali angka ditemukan
+        }
+    }
+
+    // Menampilkan total kemunculan jika data ditemukan
+    if (found) {
+        cout << "Total angka " << search << " muncul sebanyak " << count << " kali di dalam array tersebut." << endl;
+    } else {
+        cout << "Kunci " << search << " tidak ditemukan dalam array." << endl;
+    }
+}
+
+int main() {
+    // Data Array sesuai permintaan soal latihan
+    int listArray[] = {9, 2, 5, 2, 7, 6, 11, 2};
+    int n = sizeof(listArray) / sizeof(listArray[0]);
+
+    int search = 2; // Angka yang dicari
+
+    // Menampilkan data awal array
+    cout << "Data Array: ";
+    for (int i = 0; i < n; i++) {
+        cout << listArray[i] << " ";
+    }
+    cout << "\n\n";
+
+    cout << "Mencari angka " << search << "..." << endl;
+    
+    // Memanggil fungsi pencarian
+    sequentialSearchMultiple(listArray, n, search);
+
+    return 0;
+}
